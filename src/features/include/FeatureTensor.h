@@ -18,6 +18,7 @@ class FeatureTensor
 public:
 	// FeatureTensor();
 	FeatureTensor(const std::string& model_meta, const std::string& model_data);
+  FeatureTensor(const std::string& frozen_mod);
 	FeatureTensor(const FeatureTensor&);
 	FeatureTensor& operator = (const FeatureTensor&);
 	bool getRectsFeature(const cv::Mat& img, DETECTIONS& d);
@@ -35,4 +36,5 @@ private:
 	tensorflow::string input_layer;
 	std::string tf_model_meta;
 	std::string tf_model_data;
+  std::string tf_frozen_mod;
 };

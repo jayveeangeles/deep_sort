@@ -10,6 +10,13 @@ FeatureTensor::FeatureTensor(const std::string& model_meta, const std::string& m
 	if(status == false) exit(1);
 }
 
+FeatureTensor::FeatureTensor(const std::string& frozen_mod) : tf_frozen_mod(frozen_mod)
+{
+	//prepare model:
+	bool status = init();
+	if(status == false) exit(1);
+}
+
 FeatureTensor::~FeatureTensor() 
 {
 	session->Close();
@@ -24,24 +31,39 @@ bool FeatureTensor::init() {
 	session = std::shared_ptr<tensorflow::Session>(NewSession(sessOptions));
 	if(session == nullptr) return false;
 
-	// const tensorflow::string pathToGraph = TENSORFLOW_MODEL_META;
-	const tensorflow::string pathToGraph = tf_model_meta;
-	Status status;
-	MetaGraphDef graph_def;
-	status = ReadBinaryProto(tensorflow::Env::Default(), pathToGraph, &graph_def);
-	if(status.ok() == false) return false;
+  Status status;
 
-	status = session->Create(graph_def.graph_def());
-	if(status.ok() == false) return false;
+  if (tf_frozen_mod.empty())
+  {
+    MetaGraphDef graph_def;
+    const tensorflow::string pathToGraph = tf_model_meta;
 
-	// const tensorflow::string checkpointPath = TENSORFLOW_MODEL;
-	const tensorflow::string checkpointPath = tf_model_data;
-	Tensor checkpointTensor(DT_STRING, TensorShape());
-	checkpointTensor.scalar<std::string>()() = checkpointPath;
-	status = session->Run(
-			{ {graph_def.saver_def().filename_tensor_name(), checkpointTensor}, },
-			{}, {graph_def.saver_def().restore_op_name()}, nullptr );
-	if(status.ok() == false) return false;
+    status = ReadBinaryProto(tensorflow::Env::Default(), pathToGraph, &graph_def);
+    if(status.ok() == false) return false;
+
+    status = session->Create(graph_def.graph_def());
+    if(status.ok() == false) return false;
+
+    const tensorflow::string checkpointPath = tf_model_data;
+    Tensor checkpointTensor(DT_STRING, TensorShape());
+    checkpointTensor.scalar<std::string>()() = checkpointPath;
+
+    status = session->Run(
+        { {graph_def.saver_def().filename_tensor_name(), checkpointTensor}, },
+        {}, {graph_def.saver_def().restore_op_name()}, nullptr );
+    if(status.ok() == false) return false;
+  }
+  else
+  {
+    GraphDef graph_def;
+    const tensorflow::string pathToGraph = tf_frozen_mod;
+
+    status = ReadBinaryProto(tensorflow::Env::Default(), pathToGraph, &graph_def);
+    if(status.ok() == false) return false;
+
+    status = session->Create(graph_def);
+    if(status.ok() == false) return false;
+  }
 
 	input_layer = "Placeholder:0";
 	outnames.push_back("truediv:0");
