@@ -61,12 +61,16 @@ bool FeatureTensor::init() {
     status = ReadBinaryProto(tensorflow::Env::Default(), pathToGraph, &graph_def);
     if(status.ok() == false) return false;
 
+    // graph::SetDefaultDevice("/gpu:4", &graph_def);
+    // sessOptions.config.set_allow_soft_placement(true);
+
     status = session->Create(graph_def);
     if(status.ok() == false) return false;
   }
 
-	input_layer = "Placeholder:0";
-	outnames.push_back("truediv:0");
+	input_layer = "images:0";
+	// outnames.push_back("truediv:0");
+  outnames.push_back("features:0");
 	feature_dim = 128;
 	return true;
 }
