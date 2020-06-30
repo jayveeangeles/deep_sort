@@ -46,6 +46,7 @@ include_directories(${PROJECT_BINARY_DIR}/../src/app/include/)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../src/app/include/)
 
 link_directories($ENV{CONDA_PREFIX}/./lib/python3.6/site-packages/tensorflow_core)
+link_directories($ENV{CONDA_PREFIX}/./lib)
 
 add_definitions(-Wuninitialized)
 add_definitions(-Wreturn-type)
@@ -64,7 +65,7 @@ file(GLOB_RECURSE SRC_FILES "src/app/src/param.cpp" "errmsg.cpp" "src/features/*
 #Library
 add_library(deepsort SHARED ${SRC_FILES})
 # target_link_libraries(deepsort ${OpenCV_LIBS}  ${Boost_LIBRARIES} TensorflowCC::Shared  ${CUDA_LIBRARIES})
-target_link_libraries(deepsort ${OpenCV_LIBS}  ${Boost_LIBRARIES} tensorflow_cc  ${CUDA_LIBRARIES})
+target_link_libraries(deepsort ${OpenCV_LIBS} ${Boost_LIBRARIES} tensorflow_cc uuid ${CUDA_LIBRARIES})
 
 # add_executable(deep_sort ${SRC_FILES})
 # target_link_libraries(deep_sort deepsort)

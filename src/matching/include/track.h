@@ -2,6 +2,7 @@
 #define TRACK_H
 
 #include <future>
+#include <uuid/uuid.h>
 
 #include "dataType.h"
 #include "utility.h"
@@ -77,6 +78,7 @@ public:
     FEATURESS features;
     KAL_MEAN mean;
     KAL_COVA covariance;
+    std::string uuid_id;
 
     int hits;
     int age;
@@ -85,6 +87,8 @@ public:
     TrackState state;
 private:
     void featuresAppendOne(const FEATURE& f);
+    std::string generateUUID();
+    uuid_t uuid;
 };
 
 #endif // TRACK_H

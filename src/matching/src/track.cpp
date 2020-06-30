@@ -5,6 +5,7 @@ Track::Track(KAL_MEAN& mean, KAL_COVA& covariance, int track_id, int n_init, int
     this->mean = mean;
     this->covariance = covariance;
     this->track_id = track_id;
+    this->uuid_id = this->generateUUID();
     this->hits = 1;
     this->age = 1;
     this->time_since_update = 0;
@@ -15,6 +16,17 @@ Track::Track(KAL_MEAN& mean, KAL_COVA& covariance, int track_id, int n_init, int
     this->_n_init = n_init;
     this->_max_age = max_age;
     this->color = col;
+}
+
+std::string Track::generateUUID()
+{
+  uuid_generate_time_safe(uuid);
+  char uuid_str[37];
+  uuid_unparse_lower(uuid, uuid_str);
+
+  std::string s(uuid_str);
+
+  return s;
 }
 
 void Track::predit(std::shared_ptr<KalmanFilter> &kf)
