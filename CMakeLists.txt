@@ -75,7 +75,7 @@ file(GLOB_RECURSE SRC_FILES "src/app/src/param.cpp" "errmsg.cpp" "src/features/*
 #Library
 add_library(deepsort SHARED ${SRC_FILES})
 # target_link_libraries(deepsort ${OpenCV_LIBS}  ${Boost_LIBRARIES} TensorflowCC::Shared  ${CUDA_LIBRARIES})
-target_link_libraries(deepsort ${OpenCV_LIBS} ${Boost_LIBRARIES} tensorflow_cc uuid ${CUDA_LIBRARIES})
+target_link_libraries(deepsort ${OpenCV_LIBS} ${Boost_LIBRARIES} tensorflow_cc tensorflow_framework uuid ${CUDA_LIBRARIES})
 
 # add_executable(deep_sort ${SRC_FILES})
 # target_link_libraries(deep_sort deepsort)
