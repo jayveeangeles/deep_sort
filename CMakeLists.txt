@@ -33,8 +33,10 @@ find_package(Boost REQUIRED)
 find_package(CUDA)
 
 if(NOT DEFINED TENSORFLOW_ROOT_DIR)
-  set(TENSORFLOW_ROOT_DIR "/usr/local/lib")
+  set(TENSORFLOW_ROOT_DIR "/usr/local")
 endif()
+
+MESSAGE("tensorflow root dir: ${TENSORFLOW_ROOT_DIR}")
 
 include_directories(${EIGEN3_INCLUDE_DIR})
 include_directories(${OpenCV_INCLUDE_DIRS})
