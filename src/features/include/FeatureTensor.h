@@ -21,7 +21,7 @@ public:
   FeatureTensor(const std::string& frozen_mod);
 	FeatureTensor(const FeatureTensor&);
 	FeatureTensor& operator = (const FeatureTensor&);
-	bool getRectsFeature(const cv::Mat& img, DETECTIONS& d);
+	bool getRectsFeature(const cv::Mat& img, DETECTIONS& d, uint timeout);
 	~FeatureTensor();
 
 private:

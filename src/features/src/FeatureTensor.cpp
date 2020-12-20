@@ -75,7 +75,7 @@ bool FeatureTensor::init() {
 	return true;
 }
 
-bool FeatureTensor::getRectsFeature(const cv::Mat& img, DETECTIONS& d) 
+bool FeatureTensor::getRectsFeature(const cv::Mat& img, DETECTIONS& d, uint timeout) 
 {
 	std::vector<cv::Mat> mats;
 	for(auto& dbox : d) 
@@ -117,8 +117,15 @@ bool FeatureTensor::getRectsFeature(const cv::Mat& img, DETECTIONS& d)
 	std::vector<std::pair<tensorflow::string, Tensor>> feed_dict = {
 			{input_layer, input_tensor},
 	};
-	Status status = session->Run(feed_dict, outnames, {}, &output_tensors);
-	if(status.ok() == false) return false;
+
+	RunOptions run_options;
+	run_options.set_timeout_in_ms(timeout);
+
+	Status status = session->Run(run_options, feed_dict, outnames, {}, &output_tensors, nullptr);
+	if(status.ok() == false) {
+	  return false;
+	}
+	
 	float* tensor_buffer = output_tensors[0].flat<float>().data();
 	int i = 0;
 	
